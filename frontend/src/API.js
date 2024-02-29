@@ -2,8 +2,15 @@ import axios from 'axios';
 
 const API = {
 
-  getCustomers: async () => {
-    return await axios.get('/api/customers'); 
+  getCustomers: async (page, limit, searchTerm, sort) => {
+    return await axios.get('/api/customers', {
+      params: {
+        page,
+        limit,
+        searchTerm, 
+        sort   
+      }
+    });
   }
 
 };
