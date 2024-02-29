@@ -1,13 +1,16 @@
 const express = require('express');
+const cors = require('cors');
+const routes = require('./routes');
+
 const app = express();
 
-const routes = require('./routes');
+app.use(cors({
+  origin: 'http://localhost:3000'
+}));
+
 app.use('/api', routes);
-const PORT = process.env.PORT || 5000; 
+
+const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
-});
-
-app.listen(3000, () => {
-  console.log('Server listening on port 3000');
 });
