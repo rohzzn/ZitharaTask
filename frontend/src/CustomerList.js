@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import API from './API';  
+import API from './API';
 import Customer from './Customer';
-import Pagination from './Pagination';
 
 function CustomersList() {
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [customersPerPage] = useState(20);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState('date');
+  const [sortOrder, setSortOrder] = useState('asc');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,13 +25,29 @@ function CustomersList() {
     fetchData();
   }, []);
 
-  // Calculate indexes for pagination
-  const indexOfLastCustomer = currentPage * customersPerPage;
-  const indexOfFirstCustomer = indexOfLastCustomer - customersPerPage;
-  const currentCustomers = customers.slice(indexOfFirstCustomer, indexOfLastCustomer);
+  const filteredCustomers = customers.filter(
+    customer =>
+      customer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      customer.location.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
-  // Function to handle pagination
-  const paginate = pageNumber => setCurrentPage(pageNumber);
+  const sortedCustomers = filteredCustomers.sort((a, b) => {
+    const aValue = sortBy === 'date' ? new Date(a.date) : a.time;
+    const bValue = sortBy === 'date' ? new Date(b.date) : b.time;
+    return sortOrder === 'asc' ? aValue - bValue : bValue - aValue;
+  });
+
+  const handleSearchChange = e => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleSortChange = e => {
+    setSortBy(e.target.value);
+  };
+
+  const handleSortOrderChange = e => {
+    setSortOrder(e.target.value);
+  };
 
   if (loading) {
     return <p>Loading...</p>;
@@ -43,6 +59,22 @@ function CustomersList() {
 
   return (
     <div>
+      <div>
+        <input
+          type="text"
+          placeholder="Search by name or location"
+          value={searchQuery}
+          onChange={handleSearchChange}
+        />
+        <select value={sortBy} onChange={handleSortChange}>
+          <option value="date">Sort by Date</option>
+          <option value="time">Sort by Time</option>
+        </select>
+        <select value={sortOrder} onChange={handleSortOrderChange}>
+          <option value="asc">Ascending</option>
+          <option value="desc">Descending</option>
+        </select>
+      </div>
       <table>
         <thead>
           <tr>
@@ -55,16 +87,11 @@ function CustomersList() {
           </tr>
         </thead>
         <tbody>
-          {currentCustomers.map((customer, index) => (
+          {sortedCustomers.map((customer, index) => (
             <Customer key={index} customer={customer} />
           ))}
         </tbody>
       </table>
-      <Pagination
-        customersPerPage={customersPerPage}
-        totalCustomers={customers.length}
-        paginate={paginate}
-      />
     </div>
   );
 }
