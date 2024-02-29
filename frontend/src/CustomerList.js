@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import API from './API';  
 import Customer from './Customer';
 import Pagination from './Pagination';
@@ -25,10 +25,12 @@ function CustomersList() {
     fetchData();
   }, []);
 
+  // Calculate indexes for pagination
   const indexOfLastCustomer = currentPage * customersPerPage;
   const indexOfFirstCustomer = indexOfLastCustomer - customersPerPage;
   const currentCustomers = customers.slice(indexOfFirstCustomer, indexOfLastCustomer);
 
+  // Function to handle pagination
   const paginate = pageNumber => setCurrentPage(pageNumber);
 
   if (loading) {
@@ -41,9 +43,23 @@ function CustomersList() {
 
   return (
     <div>
-      {currentCustomers.map(c => (
-        <Customer key={c.id} customer={c} />
-      ))}
+      <table>
+        <thead>
+          <tr>
+            <th>Customer Name</th>
+            <th>Age</th>
+            <th>Phone</th>
+            <th>Location</th>
+            <th>Date</th>
+            <th>Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          {currentCustomers.map((customer, index) => (
+            <Customer key={index} customer={customer} />
+          ))}
+        </tbody>
+      </table>
       <Pagination
         customersPerPage={customersPerPage}
         totalCustomers={customers.length}
