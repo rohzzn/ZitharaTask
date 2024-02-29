@@ -1,9 +1,7 @@
 import React from 'react';
 
 const Pagination = ({ customersPerPage, totalCustomers, paginate }) => {
-  // Calculate the total number of pages
   const totalPages = Math.ceil(totalCustomers / customersPerPage);
-
   if (totalPages <= 1) {
     return null;
   }

@@ -9,6 +9,8 @@ function CustomersList() {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('date');
   const [sortOrder, setSortOrder] = useState('asc');
+  const [currentPage, setCurrentPage] = useState(1);
+  const customersPerPage = 20;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,6 +39,10 @@ function CustomersList() {
     return sortOrder === 'asc' ? aValue - bValue : bValue - aValue;
   });
 
+  const indexOfLastCustomer = currentPage * customersPerPage;
+  const indexOfFirstCustomer = indexOfLastCustomer - customersPerPage;
+  const currentCustomers = sortedCustomers.slice(indexOfFirstCustomer, indexOfLastCustomer);
+
   const handleSearchChange = e => {
     setSearchQuery(e.target.value);
   };
@@ -48,6 +54,8 @@ function CustomersList() {
   const handleSortOrderChange = e => {
     setSortOrder(e.target.value);
   };
+
+  const paginate = pageNumber => setCurrentPage(pageNumber);
 
   if (loading) {
     return <p>Loading...</p>;
@@ -87,11 +95,19 @@ function CustomersList() {
           </tr>
         </thead>
         <tbody>
-          {sortedCustomers.map((customer, index) => (
+          {currentCustomers.map((customer, index) => (
             <Customer key={index} customer={customer} />
           ))}
         </tbody>
       </table>
+      <div>
+        <button onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1}>
+          Previous
+        </button>
+        <button onClick={() => paginate(currentPage + 1)} disabled={indexOfLastCustomer >= sortedCustomers.length}>
+          Next
+        </button>
+      </div>
     </div>
   );
 }
