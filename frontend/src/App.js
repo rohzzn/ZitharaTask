@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import CustomersList from './CustomersList';
+import CustomersList from './CustomerList';
 
 function App() {
   return (
