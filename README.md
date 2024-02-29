@@ -20,7 +20,7 @@ Create a .env file in then root and add the following
 DB_HOST = localhost
 DB_PORT = 5432
 DB_USER = postgres
-DB_PASS = password
+DB_PASS = admin
 DB_NAME = customerdb
 ```
 
@@ -32,18 +32,6 @@ cd frontend
 npm install 
 ```
 
-### Run
-
-```
-# Run frontend (:3000) & backend (:5000)
-npm run dev
-
-# Run frontend only
-npm run frontend
-
-# Run backend only
-npm run backend
-```
 
 ## Database Schema
 
